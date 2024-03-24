@@ -9,6 +9,15 @@ from stable_baselines3 import SAC
 from robotiqGymEnv import robotiqGymEnv
 import numpy as np
 import csv
+from moviepy.editor import ImageSequenceClip
+
+saved_dir = "evaluation"
+file_name = "test1"
+rend = True
+
+def make_video(images, output_video_file):
+        clip = ImageSequenceClip(list(images), fps=30)
+        clip.write_videofile(output_video_file, codec="libx264")
 
 def load_model(file_path):
     """
@@ -16,7 +25,7 @@ def load_model(file_path):
     """
     return SAC.load(file_path)
 
-def extract_data(env, model, obs, steps):
+def extract_data(env, model, obs):
     """
     Run the model prediction and extract data into arrays
     """
@@ -62,7 +71,9 @@ def extract_data(env, model, obs, steps):
         closest_point_data.append(p.getClosestPoints(env._robotiq.robotiq_uid, env.blockUid, 100, -1, -1)[0][8])
         contact_force_data.append(env._contactinfo()[5])
         rewards_data.append(rewards)
-        
+    
+    if rend:
+        make_video(env._cam2_images, f"{saved_dir}/{file_name}.mp4")
     return position_action_data, angle_action_data, gripper_position_data, gripper_angle_data, gripper_velocity_data, gripper_angular_velocity_data, target_position_data, target_angle_data, target_velocity_data, target_angular_velocity_data, closest_point_data, contact_force_data, rewards_data
 
 def plot_data(data, labels):
@@ -101,13 +112,12 @@ def main():
     """
     Main function to run the program
     """
-    model_file = "models/20230316-03:42PM_SAC/best_model.zip"
+    model_file = "models/WITH_TACTILE/model.zip"
     model = load_model(model_file)
 
-    with robotiqGymEnv(records=False, renders=False) as env:
+    with robotiqGymEnv(render= rend, TACTILE=False) as env:
         obs = env.reset()
-        steps = range(500) # define the number of steps here
-        position_action_data, angle_action_data, gripper_position_data, gripper_angle_data, gripper_velocity_data, gripper_angular_velocity_data, target_position_data, target_angle_data, target_velocity_data, target_angular_velocity_data, closest_point_data, contact_force_data, rewards_data = extract_data(env, model, obs, steps)
+        position_action_data, angle_action_data, gripper_position_data, gripper_angle_data, gripper_velocity_data, gripper_angular_velocity_data, target_position_data, target_angle_data, target_velocity_data, target_angular_velocity_data, closest_point_data, contact_force_data, rewards_data = extract_data(env, model, obs)
 
 
     data_dict = {
@@ -146,7 +156,7 @@ def main():
         "rewards": rewards_data
     }
 
-    save_to_csv("evaluation/output_data30.csv", data_dict)
+    save_to_csv(f"{saved_dir}/{file_name}.csv", data_dict)
 
 
 if __name__ == "__main__":

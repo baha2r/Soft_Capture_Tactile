@@ -29,10 +29,9 @@ class robotiqGymEnv(gym.Env):
     def __init__(self,
                  urdf_root=pybullet_data.getDataPath(),
                  action_repeat=1,
-                 renders=False,
-                 records=False,
+                 render=False,
                  max_episode_steps=500,
-                 savedir="test_data/test1",
+                 TACTILE=False,
                  ):
         """
         Initialize the environment.
@@ -42,8 +41,7 @@ class robotiqGymEnv(gym.Env):
         self._action_repeat = action_repeat
         self._observation = []
         self._stepcounter = 0
-        self._renders = renders
-        self._records = records
+        self._render = render
         self._max_steps = max_episode_steps
         self.terminated = 0
         self._keypoints = 100
@@ -54,19 +52,13 @@ class robotiqGymEnv(gym.Env):
         self.r_top = 0
         self.contactpenalize = 0
         self.target_yaw = 0
-        self.savedir = savedir
+        self.TACTILE = TACTILE
         self._cam1_images = []
         self._cam2_images = []
         self._cam3_images = []
 
         # connect to PyBullet
-        rec = f"--mp4={self.savedir}/video.mp4"
-        if self._records:
-            p.connect(p.GUI, options=rec)
-        elif self._renders:
-            p.connect(p.GUI)
-        else:
-            p.connect(p.DIRECT)
+        p.connect(p.DIRECT)
 
         self.reset()
 
@@ -121,6 +113,7 @@ class robotiqGymEnv(gym.Env):
         )
 
         self.targetmass = np.random.uniform(10, 100)
+        self.targetmass = 10
         p.changeDynamics(self.blockUid, -1,
                  mass=self.targetmass
                 )
@@ -221,7 +214,8 @@ class robotiqGymEnv(gym.Env):
 
         # Add contact information to observation
         totalforce = self._contactinfo()[5]
-        # self._observation = np.append(self._observation, totalforce)
+        if self.TACTILE:
+            self._observation = np.append(self._observation, totalforce)
 
         return self._observation
     
@@ -237,13 +231,11 @@ class robotiqGymEnv(gym.Env):
         for _ in range(self._action_repeat):
             self._robotiq.apply_action(action)
             p.stepSimulation()
-            # self.render()
+            if self._render:
+                self.render()
             if self._termination():
                 break
             self._stepcounter += 1
-
-        if self._renders:
-            time.sleep(self._timeStep)
 
         self._observation = self.getExtendedObservation()
         done = self._termination()
@@ -278,15 +270,15 @@ class robotiqGymEnv(gym.Env):
         width, height = RENDER_WIDTH, RENDER_HEIGHT
 
         # # Calculate the view and projection matrices for the camera
-        view_matrix_1 = p.computeViewMatrix(cameraEyePosition=camera_pos, cameraTargetPosition=target_pos, cameraUpVector=[0, 1, 0])
+        # view_matrix_1 = p.computeViewMatrix(cameraEyePosition=camera_pos, cameraTargetPosition=target_pos, cameraUpVector=[0, 1, 0])
         view_matrix_2 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=grip_pos, distance=0.9, yaw=90, pitch=-20, roll=0, upAxisIndex=2)
-        view_matrix_3 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=target_pos, distance=0.9, yaw=180, pitch=-20, roll=0, upAxisIndex=2)
+        # view_matrix_3 = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=target_pos, distance=0.9, yaw=180, pitch=-20, roll=0, upAxisIndex=2)
         proj_matrix = p.computeProjectionMatrixFOV(fov=60, aspect=float(width) / height, nearVal=0.1, farVal=10.0)
 
         # First camera
-        _, _, rgbImg1, _, _ = p.getCameraImage(width, height, viewMatrix = view_matrix_1, projectionMatrix = proj_matrix)
-        rgbImg1 = rgbImg1[:, :, :3]
-        self._cam1_images.append(rgbImg1)
+        # _, _, rgbImg1, _, _ = p.getCameraImage(width, height, viewMatrix = view_matrix_1, projectionMatrix = proj_matrix)
+        # rgbImg1 = rgbImg1[:, :, :3]
+        # self._cam1_images.append(rgbImg1)
 
         # Second camera
         _, _, rgbImg2, _, _ = p.getCameraImage(width, height, viewMatrix = view_matrix_2, projectionMatrix = proj_matrix)
@@ -294,9 +286,9 @@ class robotiqGymEnv(gym.Env):
         self._cam2_images.append(rgbImg2)
         
         # third camera
-        _, _, rgbImg3, _, _ = p.getCameraImage(width, height, viewMatrix = view_matrix_3, projectionMatrix = proj_matrix)
-        rgbImg3 = rgbImg3[:, :, :3]
-        self._cam3_images.append(rgbImg3)
+        # _, _, rgbImg3, _, _ = p.getCameraImage(width, height, viewMatrix = view_matrix_3, projectionMatrix = proj_matrix)
+        # rgbImg3 = rgbImg3[:, :, :3]
+        # self._cam3_images.append(rgbImg3)
         
 
         return np.array([])
