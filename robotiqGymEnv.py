@@ -113,7 +113,7 @@ class robotiqGymEnv(gym.Env):
         )
 
         self.targetmass = np.random.uniform(10, 100)
-        self.targetmass = 10
+        self.targetmass = 100
         p.changeDynamics(self.blockUid, -1,
                  mass=self.targetmass
                 )

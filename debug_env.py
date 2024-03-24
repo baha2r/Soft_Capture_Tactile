@@ -112,10 +112,10 @@ def main():
     """
     Main function to run the program
     """
-    model_file = "models/WITH_TACTILE/model.zip"
+    model_file = "models/WITHOUT_TACTILE/model.zip"
     model = load_model(model_file)
 
-    with robotiqGymEnv(render= rend, TACTILE=False) as env:
+    with robotiqGymEnv(render= rend, TACTILE=True) as env:
         obs = env.reset()
         position_action_data, angle_action_data, gripper_position_data, gripper_angle_data, gripper_velocity_data, gripper_angular_velocity_data, target_position_data, target_angle_data, target_velocity_data, target_angular_velocity_data, closest_point_data, contact_force_data, rewards_data = extract_data(env, model, obs)
 
