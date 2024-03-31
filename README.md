@@ -1,5 +1,17 @@
+The primary objective of this study is to demonstrate the significance of utilizing tactile sensors during the soft-capture phase of grasping. To highlight this, we compare two identical agents that differ in only one aspect to observe how this singular difference influences the training outcomes. One agent is equipped with tactile sensors, thereby incorporating the normal contact force applied to the robotic gripper within its state information, whereas the other agent lacks this feature. 
+# Training Schematic 
+<img width="1063" alt="Screenshot 2024-03-31 at 1 10 19 AM" src="https://github.com/baha2r/Soft_Capture_Tactile/assets/75396051/33082b74-9442-48d7-866a-71c87cf75a13">
+
+# Results 
+<img width="1270" alt="Screenshot 2024-03-31 at 1 12 19 AM" src="https://github.com/baha2r/Soft_Capture_Tactile/assets/75396051/86a73c96-97e0-4bf5-9698-1faea24d3896">
+
+# With TACTILE Sensor Feedback
+
+# Without TACTILE Sensor Feedback
+
 # Observation Space
-The observation space for the robotic arm environment is represented by the configuration, Box(-inf, inf, (40,), float32). This space consists of a set of 40 continuous variables, each describing a distinct attribute related to the position, movement, and velocity of both the robotic gripper and its target. These variables embody an extensive range of information about the environment, capturing the dynamism and intricacies involved in the manipulative tasks of the robotic arm. 
+The state representation for each agent combines several parameters: the pose and velocity of the gripper, the pose and velocity of the target, their respective differences, and the minimum distance in each direction between them, all defined within the inertial frame. Consequently, this results in a 39-dimensional state space for the agent without access to contact force data. In contrast, the other agent's state space is 40-dimensional, including an additional dimension for the cumulative normal contact force exerted on the gripper.
+The observation space for the robotic arm environment is represented by the configuration, Box(-inf, inf, (40,), float32) or Box(-inf, inf, (40,), float32). This space consists of a set of variables, each describing a distinct attribute related to the position, movement, and velocity of both the robotic gripper and its target. These variables embody an extensive range of information about the environment, capturing the dynamism and intricacies involved in the manipulative tasks of the robotic arm. 
 
 The table provided below offers a comprehensive overview of each variable within the observation space. It outlines not only the variable itself, but also the corresponding limits and the unit of measurement used. This range from negative infinity to positive infinity underscores the continuous nature of these variables, further emphasizing the complexity of the tasks and movements this robotic arm is designed to perform.
 
