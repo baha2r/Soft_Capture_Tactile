@@ -103,7 +103,7 @@ class robotiqGymEnv(gym.Env):
         # Generate random values
         randx, randy, randz, randf1, randf2, randf3 = np.random.uniform(-1, 1, 6)
 
-        targetpos = [0.0 + 0.50 * randx, 0.8 + 0.2 * randy, 1.0 + 0.40 * randz]
+        targetpos = [0.0 + 0.30 * randx, 0.7 + 0.2 * randy, 1.0 + 0.20 * randz]
         targetorn = p.getQuaternionFromEuler([0, 0, self.target_yaw])
 
         self.blockUid = p.loadURDF(
@@ -113,7 +113,6 @@ class robotiqGymEnv(gym.Env):
         )
 
         self.targetmass = np.random.uniform(10, 100)
-        self.targetmass = 100
         p.changeDynamics(self.blockUid, -1,
                  mass=self.targetmass
                 )

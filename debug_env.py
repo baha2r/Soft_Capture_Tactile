@@ -11,8 +11,8 @@ import numpy as np
 import csv
 from moviepy.editor import ImageSequenceClip
 
-saved_dir = "evaluation"
-file_name = "test1"
+saved_dir = "evaluation/WITHOUT_TACTILE"
+file_name = "test10"
 rend = True
 
 def make_video(images, output_video_file):
