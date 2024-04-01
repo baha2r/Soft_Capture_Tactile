@@ -213,7 +213,7 @@ class robotiqGymEnv(gym.Env):
 
         # Add contact information to observation
         totalforce = self._contactinfo()[5]
-        if self.TACTILE:
+        if not self.TACTILE:
             self._observation = np.append(self._observation, totalforce)
 
         return self._observation

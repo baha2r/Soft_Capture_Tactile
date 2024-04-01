@@ -9,8 +9,10 @@ The primary objective of this study is to demonstrate the significance of utiliz
 ![image](https://github.com/baha2r/Soft_Capture_Tactile/assets/75396051/516051b1-5d17-4f47-8db7-5915435ff51f)
 
 # TACTILE Sensor Feedback Random Episode
+[WITH_TACTILE](evaluation/WITH_TACTILE)
 
-# TACTILE Sensor Feedback Random Episode
+# NO TACTILE Sensor Feedback Random Episode
+[WITHOUT_TACTILE](evaluation/WITHOUT_TACTILE)
 
 # Observation Space
 The state representation for each agent combines several parameters: the pose and velocity of the gripper, the pose and velocity of the target, their respective differences, and the minimum distance in each direction between them, all defined within the inertial frame. Consequently, this results in a 39-dimensional state space for the agent without access to contact force data. In contrast, the other agent's state space is 40-dimensional, including an additional dimension for the cumulative normal contact force exerted on the gripper.

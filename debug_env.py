@@ -11,7 +11,7 @@ import numpy as np
 import csv
 from moviepy.editor import ImageSequenceClip
 
-saved_dir = "evaluation/WITHOUT_TACTILE"
+saved_dir = "evaluation/WITH_TACTILE"
 file_name = "test10"
 rend = True
 
@@ -112,7 +112,7 @@ def main():
     """
     Main function to run the program
     """
-    model_file = "models/WITHOUT_TACTILE/model.zip"
+    model_file = "models/WITH_TACTILE/model.zip"
     model = load_model(model_file)
 
     with robotiqGymEnv(render= rend, TACTILE=True) as env:
