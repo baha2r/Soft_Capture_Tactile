@@ -12,7 +12,7 @@ import robotiq
 import pybullet_data
 from scipy.spatial.transform import Rotation
 from scipy.spatial import ConvexHull, distance
-from moviepy.editor import ImageSequenceClip
+# from moviepy.editor import ImageSequenceClip
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 os.sys.path.insert(0, currentdir)
 

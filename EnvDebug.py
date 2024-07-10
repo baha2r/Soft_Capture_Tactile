@@ -12,7 +12,7 @@ from robotiqGymEnv import robotiqGymEnv
 
 def main():
 
-  env = robotiqGymEnv(records=False, renders=True)
+  env = robotiqGymEnv(render=False)
 
   dones = False
   obs = env.reset()
